@@ -4,7 +4,7 @@ metadata:
   name: k8s-node-drainer
   namespace: kube-system
 spec:
-  schedule: "*/30 6-14 * * 1-5" # only run during office hours
+  schedule: "*/5 3-9 * * *"
   successfulJobsHistoryLimit: 10
   failedJobsHistoryLimit: 10
   jobTemplate:
@@ -18,11 +18,13 @@ spec:
             image: logmein/k8s-node-drainer:latest
             command: [python, main.py]
             args: [
-              # add args here
+              "--notify-after=1m",
+              "--evict-after=30m",
+              "--cordon-nodes-after=1d",
             ]
             resources:
               limits:
-                memory: 100Mi
+                memory: 200Mi
               requests:
                 cpu: 5m
                 memory: 100Mi
